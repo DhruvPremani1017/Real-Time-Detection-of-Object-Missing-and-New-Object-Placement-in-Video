@@ -1,0 +1,42 @@
+# ──────────────────────────────────────────────────────────────
+# Real-Time Missing/New-Object Detector  –  Dockerfile
+# Builds a self-contained image that runs the event-aware tracker:
+#    python src/rt_detect_events.py --source demo_test.mp4 ...
+#
+# Works on CPU out-of-the-box.  If a CUDA runtime is available,
+# passing  `--gpus all`  to  docker run  will enable GPU inference.
+# ──────────────────────────────────────────────────────────────
+
+# ----- base image (CPU) --------------------------------------------------
+FROM python:3.11-slim
+
+# ----- install system deps ----------------------------------------------
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
+# ----- copy project ------------------------------------------------------
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip \
+ && pip install --no-cache-dir -r requirements.txt
+
+COPY src          ./src
+COPY yolov8_mot20.pt .
+COPY assets       ./assets          # includes fps.txt placeholder
+COPY demo_test.mp4 .
+
+# ----- entrypoint --------------------------------------------------------
+ENTRYPOINT ["python", "src/rt_detect_events.py"]
+# default arguments (can be overridden with docker run ...)
+CMD ["--source", "demo_test.mp4",
+     "--weights", "yolov8_mot20.pt",
+     "--out", "assets/output_events.mp4"]
+
+# ----- (optional) CUDA variant ------------------------------------------
+# To build a GPU image instead, replace the first two lines by:
+#   FROM nvidia/cuda:12.2.0-runtime-ubuntu22.04
+#   RUN apt-get update && apt-get install -y python3 python3-pip ffmpeg
+# and keep the rest identical. Then run with:
+#   docker build -t mot20_rt:gpu .
+#   docker run --gpus all mot20_rt:gpu
