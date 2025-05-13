@@ -85,7 +85,7 @@ _Replace with actual hosted video URL (e.g. Google Drive, Kaggle Datasets)_
 ## 🔗 Repository Contents
 
 - `real-time-detection.ipynb`: Inference and tracking logic
-- `report_DhruvPremani_ML_Intern.docx`: Detailed project report
+- `Real‑Time Object Inventory Tracking Report.pdf`: Detailed project report
 - `README.md`: This file
 
 ---
