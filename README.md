@@ -47,7 +47,7 @@ While sustaining ≥ 25 FPS on the MOT20 dataset (crowded pedestrians).
 ## Quick Start
 
 ```bash
-git clone https://github.com/<your-handle>/mot20_rt.git
+git clone https://github.com/DhruvPremani1017/Real-Time-Detection-of-Object-Missing-and-New-Object-Placement-in-Video.git
 cd mot20_rt
 python -m pip install -r requirements.txt
 python src/rt_detect_events.py \
